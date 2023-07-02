@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <iostream>
+#include "TextureLoader.h"
 
 class Game {
 	bool isRunning;
@@ -10,7 +11,9 @@ class Game {
 	SDL_Renderer* renderer;
 
 	int cnt = 0;
-
+	SDL_Texture* deckTexture;
+	int x = 0;
+	int y = 0;
 public: 
 	Game();
 	~Game(); 

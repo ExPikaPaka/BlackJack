@@ -14,7 +14,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
-		std::cout << "[INFO] Subsystems Initialised." << std::endl;	
+		std::cout << "[INFO] Subsystems Initialized." << std::endl;	
 
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		if (window) {
@@ -25,6 +25,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		if (renderer) {
 			SDL_SetRenderDrawColor(renderer, 35, 31, 42, 255);
 			std::cout << "[INFO] Renderer created." << std::endl;
+		}
+
+		deckTexture = TextureLoader::loadTexture("cards_classic.png", renderer);
+		if (deckTexture) {
+			std::cout << "[INFO] Texture loaded.";
 		}
 
 		isRunning = true;
@@ -42,19 +47,53 @@ void Game::handleEvents() {
 			isRunning = false;
 			break;
 
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_q) {
+				x--;
+			}
+			if (event.key.keysym.sym == SDLK_w) {
+				x++;
+			}
+			if (event.key.keysym.sym == SDLK_a) {
+				y--;
+			}
+			if (event.key.keysym.sym == SDLK_s) {
+				y++;
+			}
+			if (x < 0) x = 0;
+			if (x > 3) x = 3;
+			if (y < 0) y = 0;
+			if (y > 13) y = 13;
+			break;
 		default:
 			break;
 	}
 }
 
 void Game::update() {
-	cnt++;
-	std::cout << "[GAME] " << cnt << std::endl;
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
-	// Add stuff to render
+
+
+	SDL_Rect* cards = new SDL_Rect;
+	SDL_Rect* bounding = new SDL_Rect;
+	for (int i = 0; i < 4; i++) {
+		cards->x = 796 * (x + i);
+		cards->y = 1113 * y;
+		cards->w = 794;
+		cards->h = 1111;
+
+		bounding->x = 264 / 2 * i;
+		bounding->y = 0;
+		bounding->w = 264;
+		bounding->h = 370;
+		SDL_RenderCopy(renderer, deckTexture, cards, bounding);
+	}
+	
+
+	SDL_RenderPresent(renderer);
 }
 
 void Game::clean() {
