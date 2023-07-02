@@ -83,6 +83,10 @@ void AudioManager::playMusic(const char* filePath, int loops) {
     }
 }
 
+void AudioManager::setMusicVolume(int volume) {
+    Mix_VolumeMusic(volume);
+}
+
 void AudioManager::stopMusic() {
     if (music) {
         Mix_HaltMusic();

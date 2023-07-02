@@ -15,7 +15,9 @@ public:
     void setSoundVolume(const char* soundId, int volume);
     void setSoundPan(const char* soundId, int pan);
     void setSoundPosition(const char* soundId, Uint8 angle, int distance);
+
     void playMusic(const char* filePath, int loops = -1);
+    void setMusicVolume(int volume);
     void stopMusic();
 
 private:

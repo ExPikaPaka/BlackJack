@@ -9,7 +9,7 @@ bool Button::init(const char* texturePath, int x, int y, int w, int h, SDL_Rende
 	SDL_QueryTexture(texture, nullptr, nullptr, &srcrect.w, &srcrect.h);
 	srcrect.x = 0;
 	srcrect.y = 0;
-	srcrect.w = 100;
+	srcrect.w /= 3;
 	
 	dstrect.x = x;
 	dstrect.y = y;

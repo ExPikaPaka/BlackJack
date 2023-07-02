@@ -32,16 +32,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "[INFO] Textures loaded." << std::endl;
 		}
 
-		if (btn.init("assets/img/button.png", 20, 20, 400, 120, renderer)) {
+		if (btn.init("assets/img/button_minus.png", 700, 110, 60, 60, renderer)) {
 			std::cout << "[INFO] Button created." << std::endl;
 		}
 
-		if (btn2.init("assets/img/button.png", 20, 200, 400, 120, renderer)) {
+		if (btn2.init("assets/img/button_add.png", 700, 30, 60, 60, renderer)) {
 			std::cout << "[INFO] Button created." << std::endl;
 		}
 
-		audioManager.loadSound("1", "assets/audio/button_click.wav");
-		audioManager.playMusic("assets/audio/Believer - Imagine Dragons - Violin VS Electric Guitar (Instrumental Cover).mp3");
+		audioManager.loadSound("button_click", "assets/audio/button_click.wav");
+		audioManager.playMusic("assets/audio/His theme _ Music Box ver..mp3");
+		audioManager.setMusicVolume(20);
 		
 
 		isRunning = true;
@@ -59,24 +60,6 @@ void Game::handleEvents() {
 			isRunning = false;
 			break;
 
-		case SDL_KEYUP:
-			if (event.key.keysym.sym == SDLK_q) {
-				x--;
-			}
-			if (event.key.keysym.sym == SDLK_w) {
-				x++;
-			}
-			if (event.key.keysym.sym == SDLK_a) {
-				y--;
-			}
-			if (event.key.keysym.sym == SDLK_s) {
-				y++;
-			}
-			if (x < 0) x = 0;
-			if (x > 3) x = 3;
-			if (y < 0) y = 0;
-			if (y > 13) y = 13;
-			break;
 		default:
 			break;
 	}
@@ -87,8 +70,15 @@ void Game::update() {
 	btn2.update();
 
 	if (btn.selected()) {
-		audioManager.playSound("1");
+		audioManager.playSound("button_click");
+		y++;
 	}
+	if (btn2.selected()) {
+		audioManager.playSound("button_click");
+		y--;
+	}
+	if (y < 0) y = 0;
+	if (y > 13) y = 13;
 }
 
 void Game::render() {
