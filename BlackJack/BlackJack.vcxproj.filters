@@ -30,6 +30,9 @@
     <ClCompile Include="src\Audio\AudioManager.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\BlackJack\BlackJack.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game\Game.h">
@@ -42,6 +45,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\Audio\AudioManager.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BlackJack\BlackJack.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

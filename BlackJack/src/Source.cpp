@@ -2,11 +2,12 @@
 
 Game* game = nullptr;
 
+#include "BlackJack/BlackJack.h"
 int main(int argc, char* argv[]) {
 	system("chcp 65001&cls");
 
 	game = new Game();
-	game->init("BlackJack", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, 0);
+	game->init("BlackJack", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1366, 768, 0);
 
 	const int FPS = 60;
 	const int frameDelay = 1000 / FPS;
@@ -31,16 +32,4 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-/*	SDL_Init(SDL_INIT_EVERYTHING);
 
-	int numDevices = SDL_GetNumAudioDevices(0);
-	if (numDevices < 1) {
-		std::cerr << "No audio devices found." << std::endl;
-	}
-
-	// Print the names of the available audio devices
-	std::cout << "Available audio devices:" << std::endl;
-	for (int i = 0; i < numDevices; ++i) {
-		const char* deviceName = SDL_GetAudioDeviceName(i, 0);
-		std::cout << "Device " << i << ": " << deviceName << std::endl;
-	}*/

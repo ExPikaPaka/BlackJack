@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioManager.cpp" />
+    <ClCompile Include="src\BlackJack\BlackJack.cpp" />
     <ClCompile Include="src\Input\Button.cpp" />
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="src\Source.cpp" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio\AudioManager.h" />
+    <ClInclude Include="src\BlackJack\BlackJack.h" />
     <ClInclude Include="src\Input\Button.h" />
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\TextureLoader\TextureLoader.h" />
