@@ -24,6 +24,6 @@ private:
     std::unordered_map<const char*, Mix_Chunk*> sounds;
     Mix_Music* music = nullptr;
 
-    void freeSound(const const char* soundId);
+    void freeSound(const char* soundId);
 };
 

@@ -64,7 +64,7 @@ void AudioManager::setSoundPosition(const char* soundId, Uint8 angle, int distan
     }
 }
 
-void AudioManager::freeSound(const const char* soundId) {
+void AudioManager::freeSound(const char* soundId) {
     auto it = sounds.find(soundId);
     if (it != sounds.end()) {
         Mix_FreeChunk(it->second);
