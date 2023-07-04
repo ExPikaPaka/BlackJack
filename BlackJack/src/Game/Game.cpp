@@ -26,24 +26,57 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			SDL_SetRenderDrawColor(renderer, 35, 31, 42, 255);
 			std::cout << "[INFO] Renderer created." << std::endl;
 		}
-
-		deckTexture = TextureLoader::loadTexture("assets/img/cards_classic.png", renderer);
-		if (deckTexture) {
-			std::cout << "[INFO] Textures loaded." << std::endl;
-		}
-
-		if (btn.init("assets/img/button_minus.png", 700, 110, 60, 60, renderer)) {
-			std::cout << "[INFO] Button created." << std::endl;
-		}
-
-		if (btn2.init("assets/img/button_add.png", 700, 30, 60, 60, renderer)) {
-			std::cout << "[INFO] Button created." << std::endl;
-		}
-
-		audioManager.loadSound("button_click", "assets/audio/button_click.wav");
-		audioManager.playMusic("assets/audio/His theme _ Music Box ver..mp3");
-		audioManager.setMusicVolume(20);
 		
+		background = TextureLoader::loadTexture("assets/img/background_green_dragon_victim.png", renderer);
+		if (background) {
+			std::cout << "[INFO] Background texture loaded." << std::endl;
+		}
+
+		if (btn.init("assets/img/hit.png", 700, 110, 90, 90, renderer)) {
+			std::cout << "[INFO] Button created." << std::endl;
+		}
+
+		if (btn2.init("assets/img/stand.png", 700, 30, 90, 90, renderer)) {
+			std::cout << "[INFO] Button created." << std::endl;
+		}
+
+		if (playerDrawer.init("assets/img/cards_classic.png", renderer, &blackJack.player, 20, 400, 200, 280, 1)) {
+			std::cout << "[INFO] PlayerDrawer created." << std::endl;
+		}
+
+		audioManager.loadSound("button_click", "assets/audio/card_flip.wav");
+		audioManager.playMusic("assets/audio/background_guitar_no_copyright.mp3");
+		audioManager.setMusicVolume(40);
+		
+		
+
+		blackJack.deck.init();
+		blackJack.deck.shuffle();
+		blackJack.player.init("Alex", 200);
+
+		A.name = CardName::ACE;
+		A.suit = Suit::CLUBS;
+		A.value = 1;
+
+		blackJack.player.addCardToHand(A);
+
+		A.name = CardName::SIX;
+		A.suit = Suit::DIAMONDS;
+		A.value = 6;
+
+		blackJack.player.addCardToHand(A);
+
+		A.name = CardName::QUEEN;
+		A.suit = Suit::HEARTS;
+		A.value = 10;
+
+		blackJack.player.addCardToHand(A);
+
+		A.name = CardName::KING;
+		A.suit = Suit::SPADES;
+		A.value = 10;
+
+		blackJack.player.addCardToHand(A);
 
 		isRunning = true;
 	} else {
@@ -69,39 +102,57 @@ void Game::update() {
 	btn.update();
 	btn2.update();
 
-	if (btn.selected()) {
+	if (playerDrawer.animationStarted()) {
 		audioManager.playSound("button_click");
-		y++;
+
+	}
+
+	if (btn.selected()) {
+	
+		A.name = CardName::KING;
+		A.suit = Suit::SPADES;
+		A.value = 10;
+
+		if (!blackJack.deck.cards.empty()) {
+			std::cout << "ADD CARD\n";
+			blackJack.player.addCardToHand(blackJack.deck.cards.back()); /// CRASHES HEEEEERE
+			blackJack.deck.cards.pop_back();
+		}
 	}
 	if (btn2.selected()) {
-		audioManager.playSound("button_click");
-		y--;
+		
+		
 	}
-	if (y < 0) y = 0;
-	if (y > 13) y = 13;
+
 }
 
 void Game::render() {
 	SDL_RenderClear(renderer);
 
+	SDL_Rect image;
+	SDL_Rect screen;
 
-	SDL_Rect* cards = new SDL_Rect;
-	SDL_Rect* bounding = new SDL_Rect;
-	for (int i = 0; i < 4; i++) {
-		cards->x = 359 * (x + i);
-		cards->y = 501 * y;
-		cards->w = 356;
-		cards->h = 499;
+	image.x = 0;
+	image.y = 0;
+	image.w = 1920;
+	image.h = 1080;
 
-		bounding->x = 264 / 2 * i;
-		bounding->y = 0;
-		bounding->w = 264;
-		bounding->h = 370;
-		SDL_RenderCopy(renderer, deckTexture, cards, bounding);
-	}
+	screen.x = 0;
+	screen.y = 0;
 	
+	SDL_GetWindowSize(window, &screen.w, &screen.h);
+
+	SDL_RenderCopy(renderer, background, &image, &screen);
+
+	
+	playerDrawer.drawHand();
+
+
 	btn.draw();
 	btn2.draw();
+
+
+
 	SDL_RenderPresent(renderer);
 }
 

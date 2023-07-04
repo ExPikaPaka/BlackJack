@@ -6,21 +6,22 @@
 #include "..\TextureLoader\TextureLoader.h"
 #include "..\Input\Button.h"
 #include "..\Audio\AudioManager.h"
+#include "..\BlackJack\BlackJack.h"
 
 class Game {
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	int cnt = 0;
-	SDL_Texture* deckTexture;
+	AudioManager audioManager;
+	PlayerDrawer playerDrawer;
+	BlackJack blackJack;
+	SDL_Texture* background;
 	Button btn;
 	Button btn2;
 
-	AudioManager audioManager;
 
-	int x = 0;
-	int y = 0;
+	Card A;
 public: 
 	Game();
 	~Game(); 
