@@ -25,12 +25,12 @@ To run the game "BlackJack" on your computer, you need to follow these steps:
 
 5. Compile and run the "BlackJack" project.
 
-## Management
+## Control
 
-Management in the game "BlackJack" is carried out using the keyboard or mouse.
+Control in the game "BlackJack" is carried out using the mouse.
 
-- Use arrow keys or mouse to navigate menus and select options.
-- To select an option or confirm an action, use the Enter key or the left mouse button.
+- Use mouse to navigate menus and select options.
+- To select an option or confirm an action, use the left mouse button.
 
 ## Dependencies
 
