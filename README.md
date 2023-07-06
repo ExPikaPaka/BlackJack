@@ -34,3 +34,4 @@ The "BlackJack" project depends on the following libraries:
 - SDL (version 2.28.0) - [https://github.com/libsdl-org/SDL/releases/tag/release-2.28.0]
 - SDL_image (version 2.6.3) - [https://github.com/libsdl-org/SDL_image/releases]
 - SDL_mixer (version 2.6.3) - [https://github.com/libsdl-org/SDL_mixer/releases]
+- SDL_ttf (version 2.6.3) - [https://github.com/libsdl-org/SDL_ttf/releases]
