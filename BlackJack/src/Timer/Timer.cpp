@@ -1,18 +1,18 @@
 #include "Timer.h"
 
 Timer::Timer() {
-	renderEnd = 0;
+	endTime = 0;
 }
 
-void Timer::setTimer(int milliseconds) {
-	renderEnd = SDL_GetTicks() + milliseconds;
+void Timer::setTimer(int endTimeMilliseconds) {
+	endTime = SDL_GetTicks() + endTimeMilliseconds;
 }
 
 bool Timer::active() {
-	return SDL_GetTicks() < renderEnd && renderEnd;
+	return SDL_GetTicks() < endTime && endTime;
 }
 
 void Timer::clear() {
-	renderEnd = 0;
+	endTime = 0;
 }
 
