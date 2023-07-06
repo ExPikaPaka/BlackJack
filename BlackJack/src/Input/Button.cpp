@@ -5,8 +5,12 @@ Button::Button() {
 
 bool Button::init(const char* texturePath, int x, int y, int w, int h, SDL_Renderer* ren) {
 	renderer = ren;
-	texture = TextureLoader::loadTexture(texturePath, renderer);
-	SDL_QueryTexture(texture, nullptr, nullptr, &srcrect.w, &srcrect.h);
+
+	// Load texture
+	buttonTex = TextureLoader::loadTexture(texturePath, renderer);
+	SDL_QueryTexture(buttonTex, nullptr, nullptr, &srcrect.w, &srcrect.h);
+
+	// Rectangles initialization
 	srcrect.x = 0;
 	srcrect.y = 0;
 	srcrect.w /= 3;
@@ -16,6 +20,7 @@ bool Button::init(const char* texturePath, int x, int y, int w, int h, SDL_Rende
 	dstrect.w = w;
 	dstrect.h = h;
 
+	// Mouse width & height to check intersection on hover
 	mouse.w = 1;
 	mouse.h = 1;
 
@@ -25,24 +30,32 @@ bool Button::init(const char* texturePath, int x, int y, int w, int h, SDL_Rende
 	clickTime = 0;
 	delay = 200;
 
-	if (!texture) {
+	// Return 'false' if error occurred during texture load
+	if (!buttonTex) {
 		return false;
 	}
+
+	// Return 'true' if button initialized successful
 	return true;
 }
 
 void Button::update() {
+	// Update mouse position & state
 	mouseState = SDL_GetMouseState(&mouse.x, &mouse.y);
 
-	// Move texture if mouse hover over button
+	// Check if mouse has intersection with button rectangle
 	if (SDL_HasIntersection(&dstrect, &mouse)) {
+		// Move drawing texture position (second image in file)
 		srcrect.x = srcrect.w;
 
 		// Update click and move texture if button pressed
 		clickStart = SDL_GetTicks();
 
+		// Delay check
 		if (clickStart > clickTime + delay) {
+			// Update state if left mouse button is pressed
 			if (!isSelected && mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+				// Move drawing texture position (third image in file)
 				srcrect.x = srcrect.w * 2;
 
 				isSelected = true;
@@ -63,7 +76,8 @@ void Button::update() {
 }
 
 void Button::draw() {
-	SDL_RenderCopy(renderer, texture, &srcrect, &dstrect);
+	// Render button texture
+	SDL_RenderCopy(renderer, buttonTex, &srcrect, &dstrect);
 }
 
 bool Button::selected() {
