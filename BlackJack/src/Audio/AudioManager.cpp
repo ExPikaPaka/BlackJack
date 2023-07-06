@@ -40,13 +40,21 @@ void AudioManager::playSound(const char* soundId, int loops, int channel) {
     }
 }
 
-void AudioManager::setSoundVolume(const char* soundId, int volume) {
+void AudioManager::setSoundVolume(const char* soundId, float volume) {
     auto it = sounds.find(soundId);
     if (it != sounds.end()) {
         // Set the volume of the sound
-        Mix_VolumeChunk(it->second, volume);
+        Mix_VolumeChunk(it->second, volume * MIX_MAX_VOLUME);
     }
 }
+
+void AudioManager::setAllSoundsVolume(float volume) {
+    for (auto& sound : sounds) {
+        // Set the volume of the sound
+        Mix_VolumeChunk(sound.second, volume * MIX_MAX_VOLUME);
+    }
+}
+
 
 void AudioManager::setSoundPan(const char* soundId, int pan) {
     auto it = sounds.find(soundId);
@@ -83,8 +91,8 @@ void AudioManager::playMusic(const char* filePath, int loops) {
     }
 }
 
-void AudioManager::setMusicVolume(int volume) {
-    Mix_VolumeMusic(volume);
+void AudioManager::setMusicVolume(float volume) {
+    Mix_VolumeMusic(volume * MIX_MAX_VOLUME);
 }
 
 void AudioManager::stopMusic() {
