@@ -75,8 +75,8 @@
     <LibraryPath>C:\sdl\SDL2_image-2.6.3\lib\x64;C:\sdl\SDL2-2.28.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\sdl\SDL2_mixer-2.6.3\include;C:\sdl\SDL2_image-2.6.3\include;C:\sdl\SDL2-2.28.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\sdl\SDL2_image-2.6.3\lib\x64;C:\sdl\SDL2-2.28.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\sdl\SDL2_ttf-2.20.2\include;C:\sdl\SDL2_mixer-2.6.3\include;C:\sdl\SDL2_image-2.6.3\include;C:\sdl\SDL2-2.28.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\sdl\SDL2_mixer-2.6.3\lib\x64;C:\sdl\SDL2_ttf-2.20.2\lib\x64;C:\sdl\SDL2_image-2.6.3\lib\x64;C:\sdl\SDL2-2.28.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,28 +131,44 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\sdl\SDL2_mixer-2.6.3\lib\x64;C:\sdl\SDL2_image-2.6.3\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\sdl\SDL2-2.28.0\lib\x64;C:\sdl\SDL2_ttf-2.20.2\lib\x64;C:\sdl\SDL2_mixer-2.6.3\lib\x64;C:\sdl\SDL2_image-2.6.3\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Input\Slider.cpp" />
     <ClCompile Include="src\Audio\AudioManager.cpp" />
     <ClCompile Include="src\BlackJack\BlackJack.cpp" />
     <ClCompile Include="src\Input\Button.cpp" />
     <ClCompile Include="src\Game\Game.cpp" />
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\TextureLoader\TextureLoader.cpp" />
+    <ClCompile Include="src\Text\TextRenderer.cpp" />
+    <ClCompile Include="src\Text\TextRendererTimer.cpp" />
+    <ClCompile Include="src\Timer\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Input\Slider.h" />
     <ClInclude Include="src\Audio\AudioManager.h" />
     <ClInclude Include="src\BlackJack\BlackJack.h" />
     <ClInclude Include="src\Input\Button.h" />
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\TextureLoader\TextureLoader.h" />
+    <ClInclude Include="src\Text\TextRenderer.h" />
+    <ClInclude Include="src\Text\TextRendererTimer.h" />
+    <ClInclude Include="src\Timer\Timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\img\logo.ico" />
+    <Image Include="assets\img\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BlackJack.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
