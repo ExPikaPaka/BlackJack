@@ -31,6 +31,7 @@ bool Slider::init(const char* rodTexturePath, int rx, int ry, int rw, int rh,
 	sliderDstRect.w = sw;
 	sliderDstRect.h = sh;
 
+	// Mouse width & height to check intersection on hover
 	mouse.w = 1;
 	mouse.h = 1;
 
@@ -40,29 +41,37 @@ bool Slider::init(const char* rodTexturePath, int rx, int ry, int rw, int rh,
 	clickTime = 0;
 	delay = 200;
 
+	// return 'false' if error occurred during texture load
 	if (!rodTex || !sliderTex) {
 		return false;
 	}
 
+	// return 'true' if slider initialized successful
 	return true;
 }
 
 void Slider::update() {
+	// Updates slider state & slider position
 	mouseState = SDL_GetMouseState(&mouse.x, &mouse.y);
 
+	// Check if mouse has intersection with bounding box
 	if (SDL_HasIntersection(&rodDstRect, &mouse) || SDL_HasIntersection(&sliderDstRect, &mouse)) {
+		// Move drawing texture position (second image in file)
 		rodSrcRect.x = rodSrcRect.w;
 		rodSrcRect.x = rodSrcRect.w;
 
 		sliderSrcRect.x = sliderSrcRect.w;
 		sliderSrcRect.x = sliderSrcRect.w;
 
+		// Check if left mouse button is pressed
 		if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+			// Changing slider state
 			if (!isSelected) {
 				isSelected = true;
 				clickStart = SDL_GetTicks();
 			}
 
+			// Move drawing texture position (third image in file)
 			sliderSrcRect.x = sliderSrcRect.w * 2;
 			sliderSrcRect.x = sliderSrcRect.w * 2;
 
@@ -97,8 +106,13 @@ void Slider::update() {
 
 
 void Slider::draw() {
+	// Draws rod          '---------'
 	SDL_RenderCopy(renderer, rodTex, &rodSrcRect, &rodDstRect);
+
+	// Draws slider on it   '[]'
 	SDL_RenderCopy(renderer, sliderTex, &sliderSrcRect, &sliderDstRect);
+
+	// Result             '--[]-----'
 }
 
 bool Slider::selected() {
@@ -106,6 +120,7 @@ bool Slider::selected() {
 }
 
 float Slider::getValue() {
+	// Calculate & return slider position in range [0,1]
 	int sliderRange = rodDstRect.w - sliderDstRect.w;
 	int sliderPos = sliderDstRect.x - rodDstRect.x;
 	return (float)(sliderPos) / (float)sliderRange;

@@ -8,5 +8,6 @@ class TextRendererTimer : public TextRenderer, public Timer {
 public:
 	TextRendererTimer();
 
+	// Combines functions from TextRenderer & Timer
 };
 
