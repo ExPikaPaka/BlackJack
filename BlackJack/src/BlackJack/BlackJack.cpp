@@ -8,6 +8,7 @@ Card::Card() {
 }
 
 std::string Card::getName() {
+	// Convert card name to the string name
 	switch (name) {
 		case CardName::ACE:
 			return std::string("ACE");
@@ -32,6 +33,7 @@ std::string Card::getName() {
 }
 
 std::string Card::getSuit() {
+	// Convert card Suit to the string name
 	switch (suit) {
 		case Suit::CLUBS:
 			return std::string("CLUBS");
@@ -56,6 +58,7 @@ std::string Card::getSuit() {
 }
 
 void Deck::init() {
+	// Remove old cards
 	cards.clear();
 
 	// Initializes cards with standard order
@@ -107,6 +110,7 @@ void Player::updateScore() {
 }
 
 void Player::addCardToHand(Card& card) {
+	// Adds card & updates 'hand' value
 	hand.push_back(card);
 	updateScore();
 }
@@ -155,6 +159,7 @@ int Player::getBet() {
 }
 
 int BlackJack::checkWinner() {
+	// Determines winner via dealer's & player's 'hand' value
 	int dealerScore = dealer.getScore();
 	int playerScore = player.getScore();
 
@@ -179,66 +184,79 @@ int BlackJack::checkWinner() {
 }
 
 void BlackJack::createNewGame() {
+	// Clearers player's & dealer's 'hand'
 	dealer.hand.clear();
 	player.hand.clear();
 
 	dealer.setScore(0);
 	player.setScore(0);
 
+	// Create a new mixed deck of cards. 
 	deck.init();
 	deck.shuffle();
 }
 
 bool PlayerDrawer::init(std::string texturePath, SDL_Renderer* ren, Player* pl, int xStart, int yStart, int cardWidth, int cardHeight, int animationDirection) {
-	renderer = ren;
 	bool error = false;
+
+	// Renderer initialization
+	renderer = ren;
 	if (!renderer) {
 		std::cerr << "[ERROR] PlayerDrawer: SDL_Renderer* = nullptr" << std::endl;
 		error = true;
 	}
 
+	// Loading card deck texture
 	deckTex = TextureLoader::loadTexture(texturePath.c_str(), renderer);
 	if (!deckTex) {
 		std::cerr << "[ERROR] PlayerDrawer: Unable to load texture" << std::endl;
 		error = true;
 	}
 
+	// Initialize player
 	player = pl;
-	if (!deckTex) {
+	if (!player) {
 		std::cerr << "[ERROR] PlayerDrawer: Player* = nullptr" << std::endl;
 		error = true;
 	}
 
+	// Initialize animation variables
+	this->animationDirection = animationDirection;
 	animatingStartedbl = false;
 	animating = false;
 	block = false;
-
 	lastCardCount = 0;
+
+	// Deck on screen position initialization
 	this->xStart = xStart;
 	this->yStart = yStart;
-
 	this->cardWidth = cardWidth;
 	this->cardHeight = cardHeight;
-
-	this->animationDirection = animationDirection;
 
 	// Setting card hidden position, dependent on animation direction 
 	animatedCardY = animationDirection == -1 ? yStart - cardWidth * 2 : animationDirection == 1 ? yStart + cardWidth * 2 : yStart;
 
+
+	// Return 'true' if object is initialized successful
+	// Return 'false' if error occurred with Player* or texture loading or SDL_Renderer*
 	return !error;
 }
 
 bool PlayerDrawer::useTexture(std::string texturePath) {
+	// Reload card deck texture
 	bool isError = false;
 
 	SDL_DestroyTexture(deckTex);
 
+	// Loading texture
 	deckTex = TextureLoader::loadTexture(texturePath.c_str(), renderer);
 	if (!deckTex) {
 		std::cerr << "[ERROR] PlayerDrawer: Unable to load texture" << std::endl;
 		isError = true;
 	}
 
+	// Return 'true' if texture loaded successful
+	// Return 'false' otherwise
 	return !isError;
 }
 
@@ -248,13 +266,18 @@ void PlayerDrawer::clearHand() {
 
 
 void PlayerDrawer::drawHand() {
-	// Used to avoid some pixels in texture 
+	// Used to avoid some pixels in texture. 
+	// Change this to 0 if you have good texture.
 	int xOffset = 3; 
 	int yOffset = 2;
 
-	// Constant parameters
+	// Cards count in texture
 	int cardsInTex = 13;
+
+	// Card overlapping multiplier
 	float widthMultiplier = 0.4;
+
+	// Texture parameters. (I used vertical texture)
 	srcCard.w = 356;
 	srcCard.h = 499;
 

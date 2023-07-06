@@ -106,7 +106,7 @@ public:
     Player dealer;
     Player player;
 
-    // Determines winner trough dealer's & player's 'hand' value
+    // Determines winner via dealer's & player's 'hand' value
     // Returns:
     //      0 : draw
     //      1 : player win
@@ -193,4 +193,3 @@ private:
     // Used for trigger-bool
     bool block;
 };
-
