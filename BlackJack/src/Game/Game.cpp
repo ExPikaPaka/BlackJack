@@ -7,16 +7,20 @@ Game::~Game() {
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
+	// Window flags
 	int flags = 0;
-
 	if (fullscreen) {
 		flags = SDL_WINDOW_FULLSCREEN;
 	}
 
+	// SDL components initialization
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
 		std::cout << "[INFO] Subsystems Initialized." << std::endl;
 
+		// Creating game window
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+
+		// Display info, if window created successful
 		if (window) {
 			std::cout << "[INFO] Window created." << std::endl;
 
@@ -26,12 +30,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			winRect.h = height;
 		}
 
+		// Creating SDL renderer
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
 			SDL_SetRenderDrawColor(renderer, 60, 60, 60, 255);
 			std::cout << "[INFO] Renderer created." << std::endl;
 		}
 		
+
+
+		// Loading background image texture
 		backgroundTex = TextureLoader::loadTexture("assets/img/background_green_dragon_light.png", renderer);
 		if (backgroundTex) {
 			std::cout << "[INFO] Background texture loaded." << std::endl;
@@ -41,6 +49,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			SDL_QueryTexture(backgroundTex, nullptr, nullptr, &bgImageRect.w, &bgImageRect.h);
 		}
 
+		// Loading bet & score table texture
 		tableTex = TextureLoader::loadTexture("assets/img/table.png", renderer);
 		if (tableTex) {
 			std::cout << "[INFO] Table texture loaded." << std::endl;
@@ -51,11 +60,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		}
 
-
+		// Loading menu texture
 		menuBgTex = TextureLoader::loadTexture("assets/img/menu_background.png", renderer);
 		if (tableTex) {
 			std::cout << "[INFO] Menu Background texture loaded." << std::endl;
 		}
+
+
+
 
 		// Bet buttons initialization
 		if (bet10Btn.init("assets/img/bet_10.png", 71, 566, 90, 90, renderer)) {
@@ -75,7 +87,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		}
 
 
-		// Menu buttons
+		// Menu buttons initialization
 		if (menuBtn.init("assets/img/menu_button.png", 1280, 0, 86, 70, renderer)) {
 			std::cout << "[INFO] Menu Button created." << std::endl;
 		}
@@ -92,7 +104,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "[INFO] Menu exit Button created." << std::endl;
 		}
 
-		// Action buttons initialization
+		// 'Hit' & 'Stand' buttons initializationn
 		if (hitBtn.init("assets/img/hit.png", 1220, 380, 90, 90, renderer)) {
 			std::cout << "[INFO] Hit Button created." << std::endl;
 		}
@@ -110,7 +122,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "[INFO] Skip tutorial Button created." << std::endl;
 		}
 
-		// Deck skin change buttons initialization
+		// Card deck skin change buttons initialization
 		if (cardColWhiteBtn.init("assets/img/btn_white_card.png", 23, 102, 50, 66, renderer)) {
 			std::cout << "[INFO] Card color white Button created." << std::endl;
 		}
@@ -138,6 +150,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		}
 	
 
+
+		// Adding buttons to interface array
 		buttons.push_back(&bet10Btn);
 		buttons.push_back(&bet25Btn);
 		buttons.push_back(&bet50Btn);
@@ -157,14 +171,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		menuButtons.push_back(&volumeBtn);
 		menuButtons.push_back(&exitBtn);
 
+
+
+		// Player's & Dealer's hand drawers initialization 
 		if (playerDrawer.init("assets/img/cards_classic.png", renderer, &blackJack.player, 490, 440, 200, 280, 1)) {
 			std::cout << "[INFO] PlayerDrawer created." << std::endl;
 		}
-		
 		if (dealerDrawer.init("assets/img/cards_gold.png", renderer, &blackJack.dealer, 490, 50, 200, 280, -1)) {
 			std::cout << "[INFO] DealerDrawer created." << std::endl;
 		}
 
+
+
+		// Loading game sounds
 		audioManager.loadSound("button_click", "assets/audio/button_click.wav");
 		audioManager.loadSound("card_flip", "assets/audio/card_flip.wav");
 		audioManager.loadSound("dealer_win", "assets/audio/dealer_win.wav");
@@ -172,35 +191,39 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		audioManager.loadSound("a_draw", "assets/audio/a_draw.wav");
 		audioManager.playMusic("assets/audio/background_guitar_no_copyright.mp3");
 
+		// Default game volume
 		currentMusicVolume = 0.3;
 		currentSoundVolume = 1.0;
 		audioManager.setMusicVolume(currentMusicVolume);
 
+		// Setting volume slider's position
 		musicVolumeSld.setValue(currentMusicVolume);
 		soundVolumeSld.setValue(currentSoundVolume);
 
 		playingMusic = true;
 		
+
+
+		// Text renderers initialization
 		if (textRenFS20.init("assets/font/STENCIL.ttf", 20, renderer)) {
 			std::cout << "[INFO] TextRenderer(FontSize 20) created." << std::endl;
 		}
-
 		if (textRenFS50.init("assets/font/STENCIL.ttf", 50, renderer)) {
 			std::cout << "[INFO] TextRenderer(FontSize 50) created." << std::endl;
 		}
-
-		if (textRenFS50Mes.init("assets/font/STENCIL.ttf", 50, renderer)) {
+		if (textRenFS50Message.init("assets/font/STENCIL.ttf", 50, renderer)) {
 			std::cout << "[INFO] TextRenderer(FontSize 50) Message created." << std::endl;
 		}
-
 		if (textRenFS50Rules.init("assets/font/STENCIL.ttf", 50, renderer)) {
 			std::cout << "[INFO] TextRenderer(FontSize 50) Rules created." << std::endl;
 			textRenFS50Rules.setTimer(15000);
 		}
 
+
+		// Creating BlackJack logic game
 		blackJack.createNewGame();
 		blackJack.player.init("Anonyms", 200);
-		winTimer.setTimer(240000);
+		winTimer.setTimer(10'800'000);
 
 		playerTurn = true;
 		displayMenu = false;
@@ -234,7 +257,7 @@ void Game::update() {
 			}
 		}
 
-		// Menu buttons update
+		// Enter menu button update
 		menuBtn.update();
 		if (menuBtn.selected()) {
 			if (displayMenu) {
@@ -243,8 +266,10 @@ void Game::update() {
 				displayMenu = true;
 			}
 		}
+
+		// Update menu buttons & sliders, if menu enabled
 		if (displayMenu) {
-			// Update sliders
+			// Update volume sliders
 			musicVolumeSld.update();
 			soundVolumeSld.update();
 
@@ -259,22 +284,22 @@ void Game::update() {
 			}
 
 
-			// Update buttons
+			// Update menu buttons
 			for (int i = 0; i < menuButtons.size(); i++) {
 				menuButtons[i]->update();
 			}
 
-			// Resume
+			// Resume button update
 			if (resumeBtn.selected()) {
 				audioManager.playSound("button_click");
 				displayMenu = false;
 			}
-			// Exit
+			// Exit button update
 			if (exitBtn.selected()) {
 				audioManager.playSound("button_click");
 				quitGame();
 			}
-			// Start a new game
+			// Start a new game button update
 			if (newGameBtn.selected()) {
 				startANewGame();
 				audioManager.playSound("button_click");
@@ -282,7 +307,9 @@ void Game::update() {
 			}
 		}
 
-		// Play sound whe new card added
+
+
+		// Play sound when a new card added
 		if (playerDrawer.animationStarted()) {
 			audioManager.playSound("card_flip");
 		}
@@ -290,7 +317,8 @@ void Game::update() {
 			audioManager.playSound("card_flip");
 		}
 
-		// Buttons logic
+
+		// Update game buttons logic
 		hitButtonLogic();
 		standButtonLogic();
 		betButtonsLogic();
@@ -303,7 +331,7 @@ void Game::update() {
 
 		// Create a new lap if old is done and waiting time >= timerTime
 		if (!winTimer.active()) {
-			winTimer.setTimer(240000);
+			winTimer.setTimer(10'800'000);
 			createANewLap();
 		}
 
@@ -316,6 +344,7 @@ void Game::update() {
 		if (menuBtn.selected()) {
 			audioManager.playSound("button_click");
 		}
+
 	} else {
 		// Update skipTutorial button
 		skipTutorialBtn.update();
@@ -327,25 +356,29 @@ void Game::update() {
 }
 
 void Game::render() {
+	// Clear previous frame
 	SDL_RenderClear(renderer);
 
 	// Draw background
 	SDL_RenderCopy(renderer, backgroundTex, &bgImageRect, &winRect);
 
-	// Render players & table
+	// Render player's & dealer's 'hand'
 	playerDrawer.drawHand();
 	dealerDrawer.drawHand();
+
+	// Render bet & score table
 	SDL_RenderCopy(renderer, tableTex, &srcTableRect, &srcTableRect);
 	
+
 	// Render buttons
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i]->draw();
 	}
 
-	// Render info
+
+	// Render score text
 	textRenFS20.renderText(std::string("Balance:   ") + std::to_string(blackJack.player.getBalance()), 25, 25, white);
 	textRenFS20.renderText(std::string("Bet:   ") + std::to_string(blackJack.player.getBet()), 25, 55, white);
-
 
 	// Render text "First place a bet" if bet is 0
 	renderPlaceBetMessage();
@@ -355,18 +388,21 @@ void Game::render() {
 		renderWinMessage();
 	}
 
-	// Render menu
+
+	// Render menu button
 	menuBtn.draw();
+
+	// Render menu, if menu button is selected
 	if (displayMenu) {
 		// Render Menu box
 		SDL_RenderCopy(renderer, menuBgTex, nullptr, nullptr);
 
-		// Render buttons
+		// Render menu buttons
 		for (int i = 0; i < menuButtons.size(); i++) {
 			menuButtons[i]->draw();
 		}
 
-		// Render sliders
+		// Render volume sliders
 		musicVolumeSld.draw();
 		soundVolumeSld.draw();
 	}
@@ -374,10 +410,10 @@ void Game::render() {
 	// Render NotEnoughMoney message in case if bet > balance
 	renderNotEnoughMoneyMessage();
 
-	// Render rules at the beginning
+	// Render rules at the beginning of the game
 	renderRulesMessage();
 
-	// Present render
+	// Present render frame
 	SDL_RenderPresent(renderer);
 }
 
@@ -440,7 +476,7 @@ void Game::hitButtonLogic() {
 				blackJack.dealer.hand.at(0).hidden = true;
 			} else {
 				// Display message "Bet can't be zero!"
-				textRenFS50Mes.setTimer(1000);
+				textRenFS50Message.setTimer(1000);
 			}
 		} else {
 			// If both already have at least 2 cards
@@ -461,35 +497,50 @@ void Game::hitButtonLogic() {
 void Game::betButtonsLogic() {
 	// Player bet update if hand is clear
 	if (!blackJack.player.hand.size()) {
+
+		// Bet button with value '10' logic
 		if (bet10Btn.selected()) {
+			// Checking if player can afford bet
 			if (blackJack.player.getBalance() >= blackJack.player.getBet() + 10) {
 				blackJack.player.setBet(blackJack.player.getBet() + 10);
 			} else {
 				activateMoneyMessage();
 			}
 		}
+
+		// Bet button with value '25' logic
 		if (bet25Btn.selected()) {
+			// Checking if player can afford bet
 			if (blackJack.player.getBalance() >= blackJack.player.getBet() + 25) {
 				blackJack.player.setBet(blackJack.player.getBet() + 25);
 			} else {
 				activateMoneyMessage();
 			}
 		}
+
+		// Bet button with value '50' logic
 		if (bet50Btn.selected()) {
+			// Checking if player can afford bet
 			if (blackJack.player.getBalance() >= blackJack.player.getBet() + 50) {
 				blackJack.player.setBet(blackJack.player.getBet() + 50);
 			} else {
 				activateMoneyMessage();
 			}
 		}
+
+		// Bet button with value '100' logic
 		if (bet100Btn.selected()) {
+			// Checking if player can afford bet
 			if (blackJack.player.getBalance() >= blackJack.player.getBet() + 100) {
 				blackJack.player.setBet(blackJack.player.getBet() + 100);
 			} else {
 				activateMoneyMessage();
 			}
 		}
+
+		// Bet button with value '500' logic
 		if (bet500Btn.selected()) {
+			// Checking if player can afford bet
 			if (blackJack.player.getBalance() >= blackJack.player.getBet() + 500) {
 				blackJack.player.setBet(blackJack.player.getBet() + 500);
 			} else {
@@ -500,8 +551,14 @@ void Game::betButtonsLogic() {
 }
 
 void Game::winnerLogic() {
+	// Winner update logic, if dealer has cards in his 'hand'
 	if (blackJack.dealer.hand.size()) {
+
+		// Continue logic, if first dealer card is hidden
 		if (blackJack.dealer.hand[0].hidden) {
+
+			// Continue logic, if dealer has enough cards, card animation ended,
+			// and player selected 'Stand' button
 			if (blackJack.dealer.getScore() >= 17 && !dealerFlipCardTimer.active() && !playerTurn) {
 				blackJack.dealer.hand.at(0).hidden = false;
 
@@ -528,10 +585,12 @@ void Game::winnerLogic() {
 					audioManager.playSound("dealer_win");
 				}
 
+				// Setting messages timers
 				winTimer.setTimer(5000);
 				winMessageTimer.setTimer(5000);
-
 				dealerFlipCardTimer.clear();
+
+				// Return control to the player
 				playerTurn = true;
 			}
 		}
@@ -539,7 +598,7 @@ void Game::winnerLogic() {
 }
 
 void Game::cardSkinLogic() {
-	// Change deck texture
+	// Change card deck texture
 	if (cardColWhiteBtn.selected()) {
 		playerDrawer.useTexture("assets/img/cards_classic.png");
 	}
@@ -558,6 +617,7 @@ void Game::cardSkinLogic() {
 }
 
 void Game::musicButtonLogic() {
+	// Mute/unmute button update
 	if (musicBtn.selected()) {
 		if (playingMusic) {
 			playingMusic = false;
@@ -573,17 +633,22 @@ void Game::musicButtonLogic() {
 }
 
 void Game::activateMoneyMessage() {
-	int moneyMessageTime = 500;
+	// Activating 'Not enough money' message
+	int moneyMessageTime = 700;
 	notEnoughMoneyTimer.setTimer(moneyMessageTime);
 	audioManager.playSound("a_draw");
 }
 
 void Game::renderWinMessage() {
+	// Message rectangle position
 	messageRect = { 690, 335, 240, 61 };
 
+	// Display message if winner message timer is active
 	if (textRenFS50.active()) {
+		// Rectangle color
 		SDL_SetRenderDrawColor(renderer, grey.r, grey.r, grey.b, grey.a);
 
+		// Displaying 'a draw' message
 		if (blackJack.checkWinner() == 0) {
 
 			textX = messageRect.x + xTextOffset;
@@ -592,6 +657,7 @@ void Game::renderWinMessage() {
 			textRenFS50.renderText("A Draw!", textX, textY, white);
 		}
 
+		// Displaying 'player win' message
 		if (blackJack.checkWinner() == 1) {
 			messageRect.x -= 49;
 			messageRect.w = 270;
@@ -602,6 +668,7 @@ void Game::renderWinMessage() {
 			textRenFS50.renderText("You win!", textX, textY, lightGold);
 		}
 
+		// Displaying 'dealer win' message
 		if (blackJack.checkWinner() == -1) {
 			messageRect.w = 340;
 			SDL_RenderFillRect(renderer, &messageRect);
@@ -611,15 +678,18 @@ void Game::renderWinMessage() {
 			textRenFS50.renderText("Dealer win!", textX, textY, lightBlue);
 		}
 
+		// Rendering player's & dealer's hand value (Score)
 		textRenFS50.renderText(std::to_string(blackJack.dealer.getScore()), dealerDrawer.getXStart() + 100, dealerDrawer.getYStart() - 45, white);
 		textRenFS50.renderText(std::to_string(blackJack.player.getScore()), playerDrawer.getXStart() + 100, playerDrawer.getYStart() - 45, white);
 	}
 }
 
 void Game::renderPlaceBetMessage() {
+	// Message rectangle position
 	messageRect = { 500, 335, 500, 61 };
 
-	if (textRenFS50Mes.active()) {
+	// Display message if bet message timer is active
+	if (textRenFS50Message.active()) {
 		SDL_RenderFillRect(renderer, &messageRect);
 
 		textX = messageRect.x + xTextOffset;
@@ -629,45 +699,57 @@ void Game::renderPlaceBetMessage() {
 }
 
 void Game::renderRulesMessage() {
+	// Message rectangle position
 	messageRect = { 510, 150, 550, 420 };
 
+	// Display message if rules message timer is active
 	if (textRenFS50Rules.active()) {
 		SDL_RenderFillRect(renderer, &messageRect);
 
+		// Variables used to make space between lines
 		int rowOffset = 50;
 		int nextLineOffset = 7;
 
+		// Header
 		textX = 690;
 		textY = 168;
 		textRenFS50Rules.setFont("assets/font/STENCIL.ttf", 30);
 		textRenFS50Rules.renderText("Rules :", textX, textY, white, 40);
 
+		// First line
 		textX = 540;
 		textY = 240;
 		textRenFS50Rules.setFont("assets/font/BRITANIC.ttf", 30);
 		textRenFS50Rules.renderText("1. Place a bet. Bet can't be zero.", textX, textY, white);
 
+		// Second line
 		textY = 240 + rowOffset * 1 - nextLineOffset * 0;
 		textRenFS50Rules.renderText("2. Press 'Hit' to start game or to", textX, textY, white);
 
+		// Second's first line subline
 		textY = 240 + rowOffset * 2 - nextLineOffset * 2;
 		textRenFS50Rules.renderText("    take one more card.", textX, textY, white);
 
+		// Third line
 		textY = 240 + rowOffset * 3 - nextLineOffset * 0;
 		textRenFS50Rules.renderText("3. Press 'Stand' to end your turn.", textX, textY, white);
 
+		// Fourth line
 		textY = 240 + rowOffset * 4 - nextLineOffset * 0;
 		textRenFS50Rules.renderText("4. The goal of blackjack is to beat", textX, textY, white);
 
+		// Fourth's first line subline
 		textY = 240 + rowOffset * 5 - nextLineOffset * 2;
 		textRenFS50Rules.renderText("     the dealer's hand without going", textX, textY, white);
 
+		// Fourth's second line subline
 		textY = 240 + rowOffset * 6 - nextLineOffset * 4;
 		textRenFS50Rules.renderText("     over 21.", textX, textY, white);
 	}
 }
 
 void Game::renderNotEnoughMoneyMessage() {
+	// Render 'Not enough money' message, if timer is active
 	if (notEnoughMoneyTimer.active()) {
 		messageRect = { 534, 335, 420, 61 };
 
@@ -681,24 +763,14 @@ void Game::renderNotEnoughMoneyMessage() {
 }
 
 void Game::createANewLap() {
+	// Create a new game lap, if dealer has cards
 	if (blackJack.dealer.hand.size()) {
+
+		// Continue logic, if dealer first card in not hidden
 		if (!blackJack.dealer.hand[0].hidden) {
 			blackJack.createNewGame();
 			playerDrawer.clearHand();
 			dealerDrawer.clearHand();
-
-			// Don't give cards until player bet != 0
-			if (blackJack.player.getBet() != 0) {
-				for (int i = 0; i < 2; i++) {
-					blackJack.player.addCardToHand(blackJack.deck.cards.back());
-					blackJack.deck.cards.pop_back();
-
-					blackJack.dealer.addCardToHand(blackJack.deck.cards.back());
-					blackJack.deck.cards.pop_back();
-				}
-
-				blackJack.dealer.hand[0].hidden = true;
-			}
 		}
 	}
 }
@@ -706,6 +778,7 @@ void Game::createANewLap() {
 
 
 void Game::startANewGame() {
+	// Create a new game, as on game startup
 	winMessageTimer.clear();
 	blackJack.createNewGame();
 	playerDrawer.clearHand();
@@ -713,7 +786,6 @@ void Game::startANewGame() {
 
 	blackJack.player.setBalance(200);
 	blackJack.player.setBet(0);
-
 }
 
 void Game::quitGame() {
