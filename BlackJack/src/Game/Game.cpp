@@ -490,7 +490,6 @@ void Game::hitButtonLogic() {
 			// Create new game, if dealers card is not hidden
 			createANewLap();
 		}
-
 	}
 }
 
