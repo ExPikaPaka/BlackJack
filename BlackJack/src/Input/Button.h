@@ -3,7 +3,15 @@
 #include <SDL.h>
 #include "..\TextureLoader\TextureLoader.h"
 
-class Button {
+// Button interface used for draw function
+class ButtonInterface {
+public:
+	virtual void draw() = 0;
+	virtual void update() = 0;
+	virtual bool selected() = 0;
+};
+
+class Button : public ButtonInterface {
 	SDL_Renderer* renderer;
 	SDL_Texture* texture;
 	SDL_Rect srcrect, dstrect;
@@ -19,8 +27,8 @@ public:
 	Button();
 
 	bool init(const char* texturePath, int x, int y, int w, int h, SDL_Renderer* ren);
-	void update();
-	void draw();
-	bool selected();
+	void update() override;
+	void draw() override;
+	bool selected() override;
 };
 
