@@ -27,10 +27,12 @@ bool TextRenderer::init(const std::string& fontPath, int fontSize, SDL_Renderer*
 
     setFont(fontPath, fontSize);
     
+    // Return 'true' if success. Otherwise 'false'
     return !isError;
 }
 
 void TextRenderer::setFontSize(int size) {
+    // Reload current font with specified size
     font_size = size;
     TTF_CloseFont(font);
     font = TTF_OpenFont(fontPath.c_str(), size);
@@ -40,6 +42,7 @@ void TextRenderer::setFontSize(int size) {
 }
 
 bool TextRenderer::setFont(const std::string& fontPath, int fontSize) {
+    // Reload current font with new one, with specified size
     bool isError = false;
     TTF_CloseFont(font);
 
@@ -51,6 +54,7 @@ bool TextRenderer::setFont(const std::string& fontPath, int fontSize) {
     this->fontPath = fontPath;
     this->font_size = fontSize;
 
+    // Return 'true' if success. Otherwise 'false'
     return !isError;
 }
 
@@ -73,11 +77,13 @@ void TextRenderer::renderText(const std::string& text, int x, int y, SDL_Color t
     SDL_Rect dstRect = { x, y, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
 
+    // Free resources
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(texture);
 }
 
 void TextRenderer::renderText(const std::string& text, int x, int y, SDL_Color textColor, int fontSize) {
+    // Renders text with specified size
     setFontSize(fontSize);
     renderText(text, x, y, textColor);
 }
