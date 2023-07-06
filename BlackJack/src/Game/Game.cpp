@@ -449,8 +449,8 @@ void Game::standButtonLogic() {
 
 				winnerLogic();
 			}
+			playerTurn = false;
 		}
-		playerTurn = false;
 	}
 }
 
