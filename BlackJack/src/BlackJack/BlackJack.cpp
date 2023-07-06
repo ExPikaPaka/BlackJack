@@ -209,7 +209,7 @@ bool PlayerDrawer::init(std::string texturePath, SDL_Renderer* ren, Player* pl, 
 		error = true;
 	}
 
-	isAnimating = false;
+	animatingStartedbl = false;
 	animating = false;
 	block = false;
 
@@ -288,10 +288,10 @@ void PlayerDrawer::drawHand() {
 	// Animate last card appearance if animation enabled
 	if (animationDirection != 0 && lastCardCount < player->hand.size()) {
 		if (block) {
-			isAnimating = false;
+			animatingStartedbl = false;
 		}
 		if (!block) {
-			isAnimating = true;
+			animatingStartedbl = true;
 			block = true;
 		}
 
@@ -361,7 +361,7 @@ void PlayerDrawer::drawHand() {
 }
 
 bool PlayerDrawer::animationStarted() {
-	return isAnimating;
+	return animatingStartedbl;
 }
 
 bool PlayerDrawer::animatingStatus() {
