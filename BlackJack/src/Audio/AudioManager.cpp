@@ -28,6 +28,7 @@ void AudioManager::loadSound(const char* soundId, const char* filePath) {
 
         sounds.emplace(soundId, sound);
     } else {
+        // Write error
         std::cerr << "[ERROR] Failed to load sound. Err: " << Mix_GetError() << std::endl;
     }
 }
@@ -55,23 +56,6 @@ void AudioManager::setAllSoundsVolume(float volume) {
     }
 }
 
-
-void AudioManager::setSoundPan(const char* soundId, int pan) {
-    auto it = sounds.find(soundId);
-    if (it != sounds.end()) {
-        // Set the pan (left-right balance) of the sound
-        Mix_SetPanning(-1, 255 - pan, pan);
-    }
-}
-
-void AudioManager::setSoundPosition(const char* soundId, Uint8 angle, int distance) {
-    auto it = sounds.find(soundId);
-    if (it != sounds.end()) {
-        // Set the position of the sound in a 2D sound space
-        Mix_SetPosition(-1, angle, distance);
-    }
-}
-
 void AudioManager::freeSound(const char* soundId) {
     auto it = sounds.find(soundId);
     if (it != sounds.end()) {
@@ -83,10 +67,12 @@ void AudioManager::freeSound(const char* soundId) {
 void AudioManager::playMusic(const char* filePath, int loops) {
     stopMusic(); // Stop any previously playing music
 
+    // Play music from file
     music = Mix_LoadMUS(filePath);
     if (music) {
         Mix_PlayMusic(music, loops);
     } else {
+        // Write error
         std::cerr << "[ERROR] Failed to load music. Err: " << Mix_GetError() << std::endl;
     }
 }
