@@ -1,5 +1,12 @@
 #include "BlackJack.h"
 
+Card::Card() {
+	name = CardName::ACE;
+	suit = Suit::DIAMONDS;
+	value = 1;
+	hidden = false;
+}
+
 std::string Card::getName() {
 	switch (name) {
 		case CardName::ACE:
@@ -49,6 +56,8 @@ std::string Card::getSuit() {
 }
 
 void Deck::init() {
+	cards.clear();
+
 	// Initializes cards with standard order
 	for (int group = (int)Suit::DIAMONDS; group <= (int)Suit::CLUBS; group++) {
 		for (int card = (int)CardName::ACE; card <= (int)CardName::KING; card++) {
@@ -169,6 +178,17 @@ int BlackJack::checkWinner() {
 	}
 }
 
+void BlackJack::createNewGame() {
+	dealer.hand.clear();
+	player.hand.clear();
+
+	dealer.setScore(0);
+	player.setScore(0);
+
+	deck.init();
+	deck.shuffle();
+}
+
 bool PlayerDrawer::init(std::string texturePath, SDL_Renderer* ren, Player* pl, int xStart, int yStart, int cardWidth, int cardHeight, int animationDirection) {
 	renderer = ren;
 	bool error = false;
@@ -190,6 +210,7 @@ bool PlayerDrawer::init(std::string texturePath, SDL_Renderer* ren, Player* pl, 
 	}
 
 	isAnimating = false;
+	animating = false;
 	block = false;
 
 	lastCardCount = 0;
@@ -206,6 +227,25 @@ bool PlayerDrawer::init(std::string texturePath, SDL_Renderer* ren, Player* pl, 
 
 	return !error;
 }
+
+bool PlayerDrawer::useTexture(std::string texturePath) {
+	bool isError = false;
+
+	SDL_DestroyTexture(deckTex);
+
+	deckTex = TextureLoader::loadTexture(texturePath.c_str(), renderer);
+	if (!deckTex) {
+		std::cerr << "[ERROR] PlayerDrawer: Unable to load texture" << std::endl;
+		isError = true;
+	}
+
+	return !isError;
+}
+
+void PlayerDrawer::clearHand() {
+	lastCardCount = 0;
+}
+
 
 void PlayerDrawer::drawHand() {
 	// Used to avoid some pixels in texture 
@@ -228,17 +268,22 @@ void PlayerDrawer::drawHand() {
 		srcCard.x = (int)player->hand.at(i).suit * srcCard.w + (int)player->hand.at(i).suit * xOffset;
 
 		// Change value
-		srcCard.y = cardsInTex * srcCard.h + (cardsInTex - (int)player->hand.at(i).value) * yOffset - (int)player->hand.at(i).value * srcCard.h;
+		srcCard.y = cardsInTex * srcCard.h + (cardsInTex - (int)player->hand.at(i).name) * yOffset - (int)player->hand.at(i).name * srcCard.h;
 
 		// Change card on screen displacement by X
 		dstScreen.x = xStart + cardWidth * widthMultiplier * i;
 		
+		// Use back of the card, if card is hidden
+		if (player->hand.at(i).hidden) {
+			srcCard.y = (cardsInTex) * srcCard.h + (cardsInTex + 1) * yOffset;
+		}
 
 		// Render
 		SDL_RenderCopy(renderer, deckTex, &srcCard, &dstScreen);
 	}
 
 
+	animating = false;
 
 	// Animate last card appearance if animation enabled
 	if (animationDirection != 0 && lastCardCount < player->hand.size()) {
@@ -254,10 +299,16 @@ void PlayerDrawer::drawHand() {
 		srcCard.x = (int)player->hand.at(lastCardCount).suit * srcCard.w + (int)player->hand.at(lastCardCount).suit * xOffset;
 
 		// Change value
-		srcCard.y = cardsInTex * srcCard.h + (cardsInTex - (int)player->hand.at(lastCardCount).value) * yOffset - (int)player->hand.at(lastCardCount).value * srcCard.h;
+		srcCard.y = cardsInTex * srcCard.h + (cardsInTex - (int)player->hand.at(lastCardCount).name) * yOffset - (int)player->hand.at(lastCardCount).name * srcCard.h;
 		
 		// Change card on screen displacement by X
 		dstScreen.x = xStart + cardWidth * widthMultiplier * lastCardCount;
+
+
+		// Use back of the card, if card is hidden
+		if (player->hand.at(lastCardCount).hidden) {
+			srcCard.y = (cardsInTex) * srcCard.h + (cardsInTex + 1) * yOffset;
+		}
 
 		
 		if (animationDirection == -1) {
@@ -304,10 +355,23 @@ void PlayerDrawer::drawHand() {
 				block = false;
 			}
 		}
+		animating = true;
 	}
 
 }
 
 bool PlayerDrawer::animationStarted() {
 	return isAnimating;
+}
+
+bool PlayerDrawer::animatingStatus() {
+	return animating;
+}
+
+int PlayerDrawer::getXStart() {
+	return xStart;
+}
+
+int PlayerDrawer::getYStart() {
+	return yStart;
 }

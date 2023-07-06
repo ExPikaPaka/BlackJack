@@ -32,9 +32,12 @@ enum class CardName {
 
 class Card {
 public:
+    Card();
+
     CardName name;
     Suit suit;
     int value;
+    bool hidden;
 
     std::string getName();
     std::string getSuit();
@@ -80,7 +83,12 @@ public:
     Player dealer;
     Player player;
 
+    // Returns:
+    //      0 : draw
+    //      1 : player win
+    //     -1 : dealer win
     int checkWinner();
+    void createNewGame();
 };
 
 class PlayerDrawer {
@@ -99,6 +107,7 @@ class PlayerDrawer {
     int animationDirection;
 
     bool isAnimating;
+    bool animating;
     bool block;
 
 public:
@@ -109,11 +118,23 @@ public:
     //     0  : no smooth appearence
     //     1  : smooth appearence from bottom to top
     bool init(std::string texturePath, SDL_Renderer* ren, Player* pl, int xStart, int yStart, int cardWidth, int cardHeight, int animationDirection);
+    
+    // Upload texture
+    bool useTexture(std::string texturePath);
+
+    // Clears variables used for hand drawing
+    void clearHand();
 
     // Draws player hand. 
     void drawHand();
 
     // Returns true if any card started animating
     bool animationStarted();
+
+    // Returns true if animating
+    bool animatingStatus();
+
+    int getXStart();
+    int getYStart();
 };
 
