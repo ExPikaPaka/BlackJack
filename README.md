@@ -1,10 +1,15 @@
-# Description of the project "BlackJack"
+# About the project
 
-![BlackJack](game_screenshot.png)
+The "BlackJack" project is a BlackJack card game developed in the C++ programming language using the SDL (Simple DirectMedia Layer) library. The game provides an opportunity to play the classic BlackJack card game against a computer dealer. Game has active interaction with player, and pleasant, soothing background music.
 
-## About the project
+## Demo photos
 
-The "BlackJack" project is a BlackJack card game developed in the C++ programming language using the SDL (Simple DirectMedia Layer) library. The game provides an opportunity to play the classic BlackJack card game against a computer dealer.
+![demo_1](https://github.com/ExPikaPaka/BlackJack/assets/112851715/9a66b6d3-cd24-4b66-af4e-3765a6a9656e)
+![demo_2](https://github.com/ExPikaPaka/BlackJack/assets/112851715/32991c61-7fd5-44fb-934e-cc6e1c98cf81)
+![demo_3](https://github.com/ExPikaPaka/BlackJack/assets/112851715/fa0bdf39-f41c-4502-90a0-d98d2d29db9b)
+![demo_4](https://github.com/ExPikaPaka/BlackJack/assets/112851715/e93c90a9-5ccc-46af-b52c-535d92461dab)
+
+
 
 ## Installation
 
@@ -34,4 +39,4 @@ The "BlackJack" project depends on the following libraries:
 - SDL (version 2.28.0) - [https://github.com/libsdl-org/SDL/releases/tag/release-2.28.0]
 - SDL_image (version 2.6.3) - [https://github.com/libsdl-org/SDL_image/releases]
 - SDL_mixer (version 2.6.3) - [https://github.com/libsdl-org/SDL_mixer/releases]
-- SDL_ttf (version 2.6.3) - [https://github.com/libsdl-org/SDL_ttf/releases]
+- SDL_ttf (version 2.20.2) - [https://github.com/libsdl-org/SDL_ttf/releases]
